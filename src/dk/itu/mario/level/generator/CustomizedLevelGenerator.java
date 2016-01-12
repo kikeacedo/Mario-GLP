@@ -4,11 +4,12 @@ import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.MarioInterface.LevelGenerator;
 import dk.itu.mario.MarioInterface.LevelInterface;
 import dk.itu.mario.level.MarioLevel;
+import dk.itu.mario.level.QuiqueLevel;
 
 public class CustomizedLevelGenerator implements LevelGenerator{
 
 	public LevelInterface generateLevel() {
-		LevelInterface level = new MarioLevel(20,150);
+		LevelInterface level = new QuiqueLevel(20,150);
 		return level;
 	}
 	
