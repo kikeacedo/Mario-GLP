@@ -22,6 +22,6 @@ public class CustomizedLevelGenerator implements LevelGenerator{
 	public LevelInterface generateLevel(String detailedInfo) {
 		// TODO Auto-generated method stub
 		return null;
-	}
+	} 
 
 }

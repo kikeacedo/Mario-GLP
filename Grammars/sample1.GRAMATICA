@@ -1,0 +1,16 @@
+// REGLAS INFINITAS
+
+Greglas = {S,T,NT,P}
+T={x, y, z, if, then, and, or, =, >, <, !=, >=, <=}
+NT={S,REGLA, COND, EXPR, VAR, OP, NUM, OPL, CIFRA}
+P={
+S ::= S REGLA | REGLA
+REGLA ::= if COND then EXPR
+COND ::= VAR OP NUM | COND OPL COND
+VAR ::= x | y | z
+OP ::=  = | > | < | != | <= | >=
+NUM ::= CIFRA NUM | CIFRA
+CIFRA ::= 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
+OPL ::= and | or
+EXPR ::= VAR = VAR | VAR = NUM
+}

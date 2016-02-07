@@ -1,0 +1,12 @@
+#A# S
+#N# RULES RULE COND EXPR INPUT OUTPUT VALOR OPL 
+#T# distancia_fantasma numero_pills numero_power if then and or is much medium low action ; 
+S ::= RULES
+RULES ::= RULES ; RULE | RULE
+RULE ::= if COND then EXPR
+COND ::= INPUT is VALOR | COND OPL COND
+EXPR ::= OUTPUT is VALOR
+INPUT ::= distancia_fantasma | numero_pills | numero_power
+OUTPUT ::= action
+VALOR ::= much | medium | low
+OPL ::= and | or
