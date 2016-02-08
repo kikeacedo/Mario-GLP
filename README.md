@@ -5,10 +5,12 @@ Generación de niveles de Mario Bros por gramáticas y algoritmo evolutivo
 
 La práctica consiste en generar un algoritmo genético basado en gramáticas que genere niveles óptimos para el juego de Mario Bros.
 La gramática utilizada ha sido la siguiente:
-#A# S
-#N# NIVEL ELEMENTOS ELEMENTO ENEMIGOS ENEMIGO OBJETOS OBJETO MONEDAS BLOQUE_MONEDAS BLOQUE BLOQUE_POWER TIPO_ENEMIGO CON_ALAS NUMERO CIFRA DOS_ARGUMENTOS TRES_ARGUMENTOS CUATRO_ARGUMENTOS CINCO_ARGUMENTOS TUBE TUBE_FLOOR PLATFORM CANNON GAP
 
-#T# ; % - , < > ( ) 0 1 2 3 4 5 6 7 8 9 true false armored_turtle chomp_flower  goompa  green_turtle  red_turtle  monedas bloque_monedas bloque bloque_power tube tube_floor platform cannon gap
+A S
+
+N NIVEL ELEMENTOS ELEMENTO ENEMIGOS ENEMIGO OBJETOS OBJETO MONEDAS BLOQUE_MONEDAS BLOQUE BLOQUE_POWER TIPO_ENEMIGO CON_ALAS NUMERO CIFRA DOS_ARGUMENTOS TRES_ARGUMENTOS CUATRO_ARGUMENTOS CINCO_ARGUMENTOS TUBE TUBE_FLOOR PLATFORM CANNON GAP
+
+T ; % - , < > ( ) 0 1 2 3 4 5 6 7 8 9 true false armored_turtle chomp_flower  goompa  green_turtle  red_turtle  monedas bloque_monedas bloque bloque_power tube tube_floor platform cannon gap
 
 S ::= NIVEL
 NIVEL ::=  % ELEMENTOS % ENEMIGOS % OBJETOS | NIVEL % ELEMENTOS % ENEMIGOS % OBJETOS
