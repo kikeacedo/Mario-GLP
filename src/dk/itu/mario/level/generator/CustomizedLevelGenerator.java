@@ -1,5 +1,6 @@
 package dk.itu.mario.level.generator;
 
+import GeneticAlgorithm.GeneticAlgorithm;
 import dk.itu.mario.MarioInterface.GamePlay;
 import dk.itu.mario.MarioInterface.LevelGenerator;
 import dk.itu.mario.MarioInterface.LevelInterface;
@@ -9,7 +10,10 @@ import dk.itu.mario.level.QuiqueLevel;
 public class CustomizedLevelGenerator implements LevelGenerator{
 
 	public LevelInterface generateLevel() {
-		LevelInterface level = new QuiqueLevel(20,150);
+		LevelInterface level = GeneticAlgorithm.getBestIndividuo();
+		if(level == null)
+			level = new QuiqueLevel(20, 150);
+		
 		return level;
 	}
 	

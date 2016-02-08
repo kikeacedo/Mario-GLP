@@ -1,5 +1,10 @@
 package GeneticAlgorithm;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+
 /**
  * @author Quique
  * @date 25/11/2015
@@ -7,32 +12,34 @@ package GeneticAlgorithm;
  */
 
 import java.util.ArrayList;     // arrayLists are more versatile than arrays
-import java.util.Collections;
 import java.util.Random;
+import java.util.Scanner;
 
+import dk.itu.mario.engine.PlayGPL;
 import dk.itu.mario.level.QuiqueLevel;
 import grammar.GPL;
 
 /**
- * Genetic Algorithm sample class <br/>
+ * QuiqueLeveltic Algorithm sample class <br/>
  * <b>The goal of this GA sample is to maximize the number of capital letters in a String</b> <br/>
- * compile using "javac GeneticAlgorithm.java" <br/>
- * test using "java GeneticAlgorithm" <br/>
+ * compile using "javac QuiqueLevelticAlgorithm.java" <br/>
+ * test using "java QuiqueLevelticAlgorithm" <br/>
  *
  */
 
 public class GeneticAlgorithm{
 	/** CONSTANTES **/
-	static int CHROMOSOME_SIZE=256*2;
-	static int POPULATION_SIZE=10;
+	static int POPULATION_SIZE=200;
 
 	/** VARIABLES **/
 
 	/**
-	 * The population contains an ArrayList of genes (the choice of arrayList over
+	 * The population contains an ArrayList of QuiqueLevels (the choice of arrayList over
 	 * a simple array is due to extra functionalities of the arrayList, such as sorting)
 	 */
 	static ArrayList<QuiqueLevel> mPopulation;
+
+	static QuiqueLevel mejorIndividuo;
 
 	public ArrayList<QuiqueLevel> getPopulation(){
 		return mPopulation;
@@ -41,33 +48,96 @@ public class GeneticAlgorithm{
 	/** METODOS **/
 
 	/**
-	 * Creates the starting population of Gene classes, whose chromosome contents are random
+	 * Creates the starting population of QuiqueLevel classes, whose chromosome contents are random
 	 * @param size: The size of the popultion is passed as an argument from the main class
 	 */
 	public GeneticAlgorithm(int size){
-		// initialize the arraylist and each gene's initial weights HERE
+		// initialize the arraylist and each QuiqueLevel's initial weights HERE
 		mPopulation = new ArrayList<QuiqueLevel>();
 		for(int i = 0; i < size; i++){
 			QuiqueLevel nivel = new QuiqueLevel(20,150);
 			nivel.iniciar(null);
 			mPopulation.add(nivel);
-			
+
 			//System.out.println("\tINDIVIDUO " + i + " random añadido");
 		}//for
 		//System.out.println("INICIALIZACION TERMINADA");
 	}//Constructor
 
-
-	// Genetic Algorithm maxA testing method
 	public static void main( String[] args ){
-		// Initializing the population (we chose 500 genes for the population,
+
+		Scanner in = new Scanner(System.in);
+
+		boolean fin = false;
+		System.out.println("Bienvenidos a MARIO BROS");
+		while(!fin){
+			System.out.println("_______________________________");
+			System.out.println("1) Generar y jugar\n2) Jugar desde archivo\n3) Salir");
+			int seleccion = in.nextInt();
+			switch (seleccion) {
+			case 1:
+				generar();
+				break;
+
+			case 2:
+				jugar();
+				break;
+
+			case 3:
+				fin = true;
+				break;
+
+			default:
+				break;
+			}
+		}//while
+		
+		in.close();
+
+	}//main
+
+
+	private static void jugar(){
+
+		String cadena;
+		FileReader f;
+		ArrayList<String> componentes = new ArrayList<String>();
+		
+		try {
+			f = new FileReader("Grammars/generada.txt");
+			BufferedReader b = new BufferedReader(f);
+			
+			while((cadena = b.readLine())!=null)
+				componentes.add(cadena);
+		
+			b.close();
+
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		QuiqueLevel nivel = new QuiqueLevel(20, 150);
+		nivel.iniciarPorComponentes(componentes);
+
+		mejorIndividuo = nivel;
+		PlayGPL juego = new PlayGPL();
+		juego.jugar();
+	}//jugar
+
+	// QuiqueLeveltic Algorithm maxA testing method
+	public static void generar(){
+		// Initializing the population (we chose 500 QuiqueLevels for the population,
 		// but you can play with the population size to try different approaches)
 		//System.out.println("START");
 		GeneticAlgorithm population = new GeneticAlgorithm(POPULATION_SIZE);
-		int generationCount = 0;
+		int QuiqueLevelrationCount = 0;
 		// For the sake of this sample, evolution goes on forever.
 		// If you wish the evolution to halt (for instance, after a number of
-		//   generations is reached or the maximum fitness has been achieved),
+		//   QuiqueLevelrations is reached or the maximum fitness has been achieved),
 		//   this is the place to make any such checks
 
 		double avgFitness = 0;
@@ -75,34 +145,32 @@ public class GeneticAlgorithm{
 		double maxFitness;
 		QuiqueLevel bestIndividuo = null;
 
-		while( avgFitness > 10){
+		while( avgFitness < 300){
 
 			avgFitness=0.f;
 			minFitness=Float.POSITIVE_INFINITY;
 			maxFitness=Float.NEGATIVE_INFINITY;
 			bestIndividuo = null;
-			// --- evaluate current generation:
-			//System.out.println("\tEVALUANDO GENERACION "+ generationCount);
-			//System.out.println("\tGENERACION "+ generationCount + " EVALUADA");
+			// --- evaluate current QuiqueLevelration:
+			//System.out.println("\tEVALUANDO QuiqueLevelRACION "+ QuiqueLevelrationCount);
+			//System.out.println("\tQuiqueLevelRACION "+ QuiqueLevelrationCount + " EVALUADA");
 
 			// --- print results here:
 			// we choose to print the average fitness,
 			// as well as the maximum and minimum fitness
 			// as part of our progress monitoring
 			String bestIndividual="";
-			String worstIndividual="";
 
 			for(int i = 0; i < population.size(); i++){
 				QuiqueLevel individuo_aux = population.getLevel(i); 
 				double currFitness = individuo_aux.getFitness();
 				avgFitness += currFitness;
 
-				if(currFitness > minFitness){
+				if(currFitness < minFitness){
 					minFitness = currFitness;
-					worstIndividual = population.getLevel(i).levelToString();
 				}//if
 
-				if(currFitness < maxFitness){
+				if(currFitness > maxFitness){
 					maxFitness = currFitness;
 					bestIndividual = population.getLevel(i).levelToString();
 					bestIndividuo = individuo_aux;
@@ -113,41 +181,43 @@ public class GeneticAlgorithm{
 				avgFitness = avgFitness/population.size(); 
 			}//if
 
-			String output = "Generation: " + generationCount;
-			output += "\t AvgFitness: " + avgFitness;
-			output += "\t MinFitness: " + minFitness;
-			output += "\t MaxFitness: " + maxFitness + ":\n" + bestIndividual;
+			String output = "Generation: " + QuiqueLevelrationCount;
+			output += "\t AvgFitness: " + round(avgFitness,2);
+			output += "\t MinFitness: " + round(minFitness,2);
+			output += "\t MaxFitness: " + round(maxFitness,2) + ":\n" + bestIndividual;
 
 
 			System.out.println(output);
-			// produce next generation:
-			//System.out.println("\t\tPRODUCIENDO "+ (generationCount+1));
-			population.produceNextGeneration();
-			//System.out.println("\t\tGENERACION "+ (generationCount+1) + " PRODUCIDA");
+			// produce next QuiqueLevelration:
+			//System.out.println("\t\tPRODUCIENDO "+ (QuiqueLevelrationCount+1));
+			population.produceNextGeneration(bestIndividuo);
+			//System.out.println("\t\tQuiqueLevelRACION "+ (QuiqueLevelrationCount+1) + " PRODUCIDA");
 
-			generationCount++;
+			QuiqueLevelrationCount++;
 		}//while
 
 		GPL.toFile(bestIndividuo.getComponentes());
-
+		mejorIndividuo = bestIndividuo;
+		PlayGPL juego = new PlayGPL();
+		juego.jugar();
 	}//main
 
 	/**
-	 * With each gene's fitness as a guide, chooses which genes should mate and produce offspring.
-	 * The offspring are added to the population, replacing the previous generation's Genes either
+	 * With each QuiqueLevel's fitness as a guide, chooses which QuiqueLevels should mate and produce offspring.
+	 * The offspring are added to the population, replacing the previous QuiqueLevelration's QuiqueLevels either
 	 * partially or completely. The population size, however, should always remain the same.
 	 * If you want to use mutation, this function is where any mutation chances are rolled and mutation takes place.
 	 */
-	public void produceNextGeneration(){
+	public void produceNextGeneration(QuiqueLevel best){
 		// use one of the offspring techniques suggested in class (also applying any mutations) HERE
 		ArrayList<QuiqueLevel> nuevaGeneracion;
 		ArrayList<QuiqueLevel> descendencia = new ArrayList<QuiqueLevel>();
 
-		Gene individuo1, individuo2;
+		QuiqueLevel individuo1, individuo2;
 		final double PORCENTAJE_MUTACION = 3.00; 
 		//		int count = 0;
 		// Generar el doble individuos (el doble del tamaño de la población)
-		while(descendencia.size() < POPULATION_SIZE*2){
+		while(descendencia.size() < POPULATION_SIZE*3/4){
 			boolean reproducido = false;	
 			//			count++;
 			while(!reproducido){
@@ -155,30 +225,30 @@ public class GeneticAlgorithm{
 				individuo1 = seleccionarIndividuo(mPopulation);
 				individuo2 = seleccionarIndividuo(mPopulation);
 
-				if(individuo1.getChromosome() != individuo2.getChromosome()){
+				if(individuo1.equals(individuo2)){
 					reproducido = true;
-					Gene[] genes = individuo1.reproduce(individuo2);
+					QuiqueLevel[] individuos = individuo1.reproduce(individuo2);
 					//System.out.println("\t\tREPRODUCCION " + count  + " TERMINADA");
 
 					double random;
-					for(int i = 0; i < genes.length; i++){
+					for(int i = 0; i < individuos.length; i++){
 						//llamamos a mutate (mutara si el random es menor que el PORCENTAJE de MUTACION
 						random = Math.random()*10;
 						if(random < PORCENTAJE_MUTACION)
-							genes[i].mutate();
-						//lo guardamos en la lista de genes nuevos
-						descendencia.add(genes[i]);
+							individuos[i].mutate();
+						//lo guardamos en la lista de QuiqueLevels nuevos
+						descendencia.add(individuos[i]);
 						//System.out.println("\t\t\t INDIVIDUO " + descendencia.size() + " METIDO");
 					}//for
 				}//if
 			}//while2
 		}//while
 
-		// Seleccionamos los individuos que formaran la nueva generacion
-		nuevaGeneracion = seleccionarNuevaGeneracion(mPopulation, descendencia, mPopulation.size());
+		// Seleccionamos los individuos que formaran la nueva QuiqueLevelracion
+		nuevaGeneracion = seleccionarNuevaGeneracion(mPopulation, descendencia, mPopulation.size(),best);
 
 		mPopulation = nuevaGeneracion;
-	}//produceNextGeneration
+	}//produceNextQuiqueLevelration
 
 	/**
 	 * Metodo que devuelve un arraylist con los individuos de la seleccion de la lista de actual y de la nueva
@@ -186,24 +256,30 @@ public class GeneticAlgorithm{
 	 * la nueva lista de individuos
 	 * @param actual
 	 * @param nueva
-	 * @return lista con los individuos de la nueva generacion
+	 * @return lista con los individuos de la nueva QuiqueLevelracion
 	 */
-	private ArrayList<QuiqueLevel> seleccionarNuevaGeneracion(ArrayList<QuiqueLevel> actual, ArrayList<QuiqueLevel> descendencia, int tamano){
+	private ArrayList<QuiqueLevel> seleccionarNuevaGeneracion(ArrayList<QuiqueLevel> actual, ArrayList<QuiqueLevel> descendencia, int tamano, QuiqueLevel best){
 		ArrayList<QuiqueLevel> nueva = new ArrayList<QuiqueLevel>();
-		ArrayList<QuiqueLevel> mezcla = mezclarListas(actual, descendencia);
 
+		//Meto el mejor
+		nueva.add(best);
+
+		//Meto la descendencia
+		for(int i = 0; i < descendencia.size(); i++)
+			nueva.add(descendencia.get(i));
+
+		//Selecciono cuales de la anterior siguen
 		//		int count = 1;
 		while(nueva.size() != tamano){
-			Gene individuo = seleccionarIndividuo(mezcla);
-			mezcla.remove(individuo);
-			nueva.add(seleccionarIndividuo(mezcla));
-			//System.out.println("\t\tINDIVIDUO " + count + " METIDDO EN LA NUEVA GENERACION");
-			//			count++;
+			QuiqueLevel individuo = seleccionarIndividuo(actual);
+			nueva.add(individuo);
+			actual.remove(individuo);
+			//System.out.println("\t\tINDIVIDUO " + count + " METIDDO EN LA NUEVA QuiqueLevelRACION");
+			//count++;
 		}//while
 
-		evaluateGeneration(nueva);
 		return nueva;
-	}//seleccionarNuevaGeneracion
+	}//seleccionarNuevaQuiqueLevelracion
 
 
 
@@ -216,9 +292,9 @@ public class GeneticAlgorithm{
 	 *   
 	 * @return individuo ganador
 	 */
-	private Gene seleccionarIndividuo(ArrayList<QuiqueLevel> poblacion){
+	private QuiqueLevel seleccionarIndividuo(ArrayList<QuiqueLevel> poblacion){
 
-		Gene ganador;
+		QuiqueLevel ganador;
 
 		int individuo1 = 0;
 		int individuo2 = 0;
@@ -234,10 +310,10 @@ public class GeneticAlgorithm{
 			individuo4 = rand.nextInt(poblacion.size());
 		}//while
 
-		Gene genA = mPopulation.get(max(individuo1, individuo2, poblacion));
-		Gene genB = mPopulation.get(max(individuo3, individuo4, poblacion));
+		QuiqueLevel genA = mPopulation.get(best(individuo1, individuo2, poblacion));
+		QuiqueLevel genB = mPopulation.get(best(individuo3, individuo4, poblacion));
 
-		ganador = (genA.mFitness >= genB.mFitness) ? genA : genB;
+		ganador = (genA.getFitness() > genB.getFitness()) ? genA : genB;
 
 		return ganador;
 	}//torneo
@@ -249,8 +325,8 @@ public class GeneticAlgorithm{
 	 * @param b
 	 * @return maximo entre a y b
 	 */
-	private int max(int a, int b, ArrayList<QuiqueLevel> poblacion){
-		return (poblacion.get(a).mFitness >= poblacion.get(b).mFitness) ? a : b;
+	private int best(int a, int b, ArrayList<QuiqueLevel> poblacion){
+		return (poblacion.get(a).getFitness() > poblacion.get(b).getFitness()) ? a : b;
 	}//max
 
 	/**
@@ -273,19 +349,6 @@ public class GeneticAlgorithm{
 
 
 	/**
-	 * Metodo que mezcla los elementos de 2 listas y los mete en una lista
-	 * @param lista1
-	 * @param lista2
-	 * @return lista con los elementos de lista1 y lista 2 mezclados
-	 */
-	private ArrayList<QuiqueLevel> mezclarListas(ArrayList<QuiqueLevel> lista1, ArrayList<QuiqueLevel> lista2){
-		lista1.addAll(lista2);
-		Collections.shuffle(lista1);
-		return lista1;
-	}//mezclarLista
-
-
-	/**
 	 * @return the size of the population
 	 */
 	public int size(){ 
@@ -294,13 +357,24 @@ public class GeneticAlgorithm{
 
 
 	/**
-	 * Returns the Gene at position <b>index</b> of the mPopulation arrayList
-	 * @param index: the position in the population of the Gene we want to retrieve
-	 * @return the Gene at position <b>index</b> of the mPopulation arrayList
+	 * Returns the QuiqueLevel at position <b>index</b> of the mPopulation arrayList
+	 * @param index: the position in the population of the QuiqueLevel we want to retrieve
+	 * @return the QuiqueLevel at position <b>index</b> of the mPopulation arrayList
 	 */
 	public QuiqueLevel getLevel(int index){ 
 		return mPopulation.get(index); 
-	}//getGene
+	}//getQuiqueLevel
 
+	private static double round(double value, int places) {
+		if (places < 0) throw new IllegalArgumentException();
 
+		long factor = (long) Math.pow(10, places);
+		value = value * factor;
+		long tmp = Math.round(value);
+		return (double) tmp / factor;
+	}//round
+
+	public static QuiqueLevel getBestIndividuo(){
+		return mejorIndividuo;
+	}
 }//class

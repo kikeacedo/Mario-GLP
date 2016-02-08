@@ -10,7 +10,7 @@ public class GPLTest2 {
 
 		ArrayList<QuiqueLevel> lista = new ArrayList<QuiqueLevel>();
 
-		for(int i  = 0; i < 5; i++){
+		for(int i  = 0; i < 100; i++){
 			QuiqueLevel nivel = new QuiqueLevel(20,150);
 			nivel.iniciar(null);
 			lista.add(nivel);
@@ -27,7 +27,7 @@ public class GPLTest2 {
 					+ "\t" + round(lista.get(i).calcularDensidad(),2)
 					+ "\t|\t" + round(lista.get(i).getFitness(),2));
 			
-			media += round(lista.get(i).getFitness(),2);
+			media += lista.get(i).getFitness();
 		}//for
 		
 		System.out.println("MEDIA: " + media/lista.size());

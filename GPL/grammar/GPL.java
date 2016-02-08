@@ -31,11 +31,6 @@ public class GPL {
 		
 		while(st.hasMoreTokens())
 			componentes.add(st.nextToken());
-
-		for(int i = 0; i < componentes.size(); i++){
-			System.out.println(componentes.get(i));
-		}//for
-		System.out.println("-------------------------------------");
 		
 		return componentes;
 	}//getComponentes

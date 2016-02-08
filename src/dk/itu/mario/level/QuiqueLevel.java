@@ -1,6 +1,7 @@
 package dk.itu.mario.level;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Enrique Acedo
@@ -13,6 +14,7 @@ import dk.itu.mario.MarioInterface.LevelInterface;
 import dk.itu.mario.engine.sprites.SpriteTemplate;
 import grammar.Derivation;
 import grammar.GPL;
+import grammar.GrammarException;
 
 public class QuiqueLevel extends Level implements LevelInterface{
 
@@ -27,7 +29,7 @@ public class QuiqueLevel extends Level implements LevelInterface{
 	private ArrayList<Integer> longitudes;
 	private int num_elementos;
 	private Derivation derivacion;
-	ArrayList<String> componentes;
+	private ArrayList<String> componentes;
 
 	/** METODOS */
 	public QuiqueLevel(int height, int width) {
@@ -45,6 +47,18 @@ public class QuiqueLevel extends Level implements LevelInterface{
 		num_elementos = 0;
 	}//constructor
 
+	public void iniciarPorComponentes(ArrayList<String> componentes){
+		this.componentes = componentes;
+
+		//Creamos la base
+		create();
+
+		//String componente =" platform , 1 3 , 4 6 , 2 0 , 2 0 - platform , 1 3 , 9 6 , 50 , 4 0 ";
+		//buildPlatform(componente);
+		//Añadimos los componentes
+		add(componentes);
+	}//crearPorComponentes
+
 	public void iniciar(Derivation d){
 		//Cogemos los componentes de la gramatica
 		if(d == null)
@@ -57,8 +71,8 @@ public class QuiqueLevel extends Level implements LevelInterface{
 		//Creamos la base
 		create();
 
-		//String componente =" platform , 1 3 , 4 6 , 2 0 , 2 0 - platform , 1 3 , 9 6 , 50 , 4 0 ";
-		//buildPlatform(componente);
+		//		String componente =" monedas , 1 0 , 3 4 , 4 5 , 6 0";
+		//		addElement(componente);
 		//Añadimos los componentes
 		add(componentes);
 	}//
@@ -123,10 +137,6 @@ public class QuiqueLevel extends Level implements LevelInterface{
 		componente = removeChar(componente, " ".charAt(0));
 
 		String[] elementos = componente.split(",");
-
-		//		for(int i = 0; i < elementos.length; i++){
-		//			System.out.println(elementos[i]);
-		//		}//for
 
 		int x = desnormalizar(Integer.parseInt(elementos[0]), wide_actual.get(wide_actual.size()-1)) + x_actual.get(x_actual.size()-1);
 		int y = desnormalizar(Integer.parseInt(elementos[1]),13);
@@ -203,7 +213,7 @@ public class QuiqueLevel extends Level implements LevelInterface{
 		String[] elementos = componente.split(",");
 
 		int x = desnormalizar(Integer.parseInt(elementos[1]), wide_actual.get(wide_actual.size()-1)) + x_actual.get(x_actual.size()-1);
-		int y = transformar_altura(desnormalizar(Integer.parseInt(elementos[2]),3)+altura_actual.get(altura_actual.size()-1));
+		int y = transformar_altura(desnormalizar(Integer.parseInt(elementos[2]),3))+altura_actual.get(altura_actual.size()-1);
 		int number = desnormalizar(Integer.parseInt(elementos[3]), 15);
 		int pisos = desnormalizar(Integer.parseInt(elementos[4]), 4);
 
@@ -229,7 +239,7 @@ public class QuiqueLevel extends Level implements LevelInterface{
 
 		int x = desnormalizar(Integer.parseInt(elementos[1]), wide_actual.get(wide_actual.size()-1)) + x_actual.get(x_actual.size()-1);
 		int y = transformar_altura(desnormalizar(Integer.parseInt(elementos[2]),3)+altura_actual.get(altura_actual.size()-1)) - 1 ;
-		int number = desnormalizar(Integer.parseInt(elementos[3]), wide_actual.get(wide_actual.size()-1));
+		int number = desnormalizar(Integer.parseInt(elementos[3]), 10);
 
 		alturas.add(y);
 
@@ -252,7 +262,7 @@ public class QuiqueLevel extends Level implements LevelInterface{
 
 		int x = desnormalizar(Integer.parseInt(elementos[1]), wide_actual.get(wide_actual.size()-1)) + x_actual.get(x_actual.size()-1);
 		int y = transformar_altura(desnormalizar(Integer.parseInt(elementos[2]),3)+altura_actual.get(altura_actual.size()-1)) - 1 ;
-		int number = desnormalizar(Integer.parseInt(elementos[3]), wide_actual.get(wide_actual.size()-1));
+		int number = desnormalizar(Integer.parseInt(elementos[3]), 10);
 
 		alturas.add(y);
 
@@ -327,7 +337,7 @@ public class QuiqueLevel extends Level implements LevelInterface{
 		for(int i = 0; i < wide; i++)
 			longitudes.add(x+i);
 
-		System.out.println(x + ", " + y + ", " + wide + ", " + mode);
+		//		System.out.println(x + ", " + y + ", " + wide + ", " + mode);
 		crearPlataforma(x, y, wide, mode);
 
 		x_actual.add(x);
@@ -625,9 +635,50 @@ public class QuiqueLevel extends Level implements LevelInterface{
 
 	public double getFitness(){
 		double result = 0;
-		result = puntuacion*calcularLinealidad()*calcularDensidad()/num_elementos;
-		return Math.abs(result);
+		double densidad = calcularDensidad();
+		double linealidad = calcularLinealidad();
+		
+		if(densidad == 0.0)
+			densidad = 0.1;
+		
+		if(linealidad == 0.0)
+			linealidad = 0.1;
+		
+		if(puntuacion == 0.0)
+			puntuacion = 0.1;
+			
+		result = ( getAlturaMedia() + num_elementos )/ (linealidad + densidad + puntuacion);
+		return (result);
 	}//calcularFitness
+
+
+	public QuiqueLevel[] reproduce(QuiqueLevel level){
+		QuiqueLevel[] result = null;
+		List<Derivation> individuos;
+		try {
+			individuos = derivacion.crossoverWX(level.getDerivation());
+			result = new QuiqueLevel[individuos.size()];
+
+			for(int i = 0; i < individuos.size(); i++){
+				QuiqueLevel nivel =  new QuiqueLevel(20, 150);
+				nivel.iniciar(individuos.get(i));
+				result[i] = nivel;
+			}//for
+
+		} catch (GrammarException e) {
+		}
+		return result;
+	}//reproduce
+
+	public void mutate(){
+		try {
+			derivacion.mutate();
+		} catch (GrammarException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}//mutate
+
 
 	/** GETTERS AND SETTERS */
 	public double getPuntuacion(){
@@ -650,7 +701,11 @@ public class QuiqueLevel extends Level implements LevelInterface{
 	public ArrayList<String> getComponentes(){
 		return componentes;
 	}//getComponentes
-	
+
+	public Derivation getDerivation(){
+		return derivacion;
+	}//getDerivation
+
 	public String levelToString() {
 		String result = "";
 		for(int i = 0; i < componentes.size(); i++){
